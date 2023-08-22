@@ -1,6 +1,5 @@
 version: 2.1
-​
-jobs:
+​jobs:
   semgrep-scan:
     parameters: 
       default_branch:
