@@ -1,0 +1,45 @@
+version: 2.1
+jobs:
+  semgrep-full-scan-main-branch:
+    docker:
+      - image: returntocorp/semgrep
+    steps:
+      - checkout
+      - run: 
+          name: "Semgrep full scan to main branch"
+          command: |
+            echo "This is a semgrep full scan to main branch"
+            semgrep ci
+  semgrep-diff-scan-feature-branch:
+    parameters:
+      default_branch:
+        type: string
+        default: main
+    environment:
+      SEMGREP_BASELINE_REF: << parameters.default_branch >>
+    docker:
+      - image: returntocorp/semgrep
+    steps:
+      - checkout
+      - run: 
+          name: "Semgrep full scan to feature branch"
+          command: |
+            echo "This is a diff scan to feature branch"
+            git fetch origin "+refs/heads/*:refs/remotes/origin/*"
+            semgrep ci
+workflows:
+  version: 2
+  scan:
+    jobs:
+      - semgrep-full-scan-main-branch:
+          filters:
+            branches:
+              only: main
+          context:
+            - dev
+      - semgrep-diff-scan-feature-branch:
+          filters:
+            branches:
+              ignore: main          
+          context:
+            - dev ## It should be create with the SEMGREP_APP_TOKEN
