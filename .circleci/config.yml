@@ -1,16 +1,13 @@
 version: 2.1
-​
 jobs:
   semgrep-scan:
     parameters: 
       default_branch:
         type: string
         default: main
-​
     environment:
       SEMGREP_REPO_URL: << pipeline.project.git_url >>
       SEMGREP_BRANCH: << pipeline.git.branch >>
-​
     docker:
       - image: returntocorp/semgrep
     steps:
@@ -27,8 +24,7 @@ jobs:
             fi
       - run:
           name: "Semgrep scan"
-          command: semgrep ci
-          
+          command: semgrep ci         
 workflows:
   Semgrep:
     jobs:
