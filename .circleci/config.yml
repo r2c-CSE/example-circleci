@@ -1,19 +1,3 @@
-workflows:
-  semgrep:
-    jobs:
-      - semgrep-full-scan:
-          filters:
-            branches:
-              only: main
-          context:
-            - semgrep
-      - semgrep-diff-scan:
-          filters:
-            branches:
-              ignore: main
-          context:
-            - semgrep
-
 jobs:
 
   semgrep-full-scan:
@@ -39,3 +23,19 @@ jobs:
           environment: 
             SEMGREP_BASELINE_REF: << parameters.default_branch >>
           command: semgrep ci
+
+workflows:
+  semgrep:
+    jobs:
+      - semgrep-full-scan:
+          filters:
+            branches:
+              only: main
+          context:
+            - semgrep
+      - semgrep-diff-scan:
+          filters:
+            branches:
+              ignore: main
+          context:
+            - semgrep
