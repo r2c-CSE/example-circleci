@@ -1,5 +1,4 @@
 jobs:
-
   semgrep-full-scan:
     docker:
       - image: returntocorp/semgrep
@@ -7,8 +6,7 @@ jobs:
       - checkout
       - run:
           name: "Semgrep full scan"
-          command: semgrep ci
-          
+          command: semgrep ci     
   semgrep-diff-scan:
     parameters:
       default_branch:
@@ -23,7 +21,6 @@ jobs:
           environment: 
             SEMGREP_BASELINE_REF: << parameters.default_branch >>
           command: semgrep ci
-
 workflows:
   semgrep:
     jobs:
