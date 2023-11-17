@@ -37,8 +37,9 @@ jobs:
           environment: 
             SEMGREP_BASELINE_REF: << parameters.default_branch >>
           command: |
-              export SEMGREP_BASELINE_REF=$(git merge-base $BASE_BRANCH HEAD)
-              echo -e "### Running a diff-aware scan against $BASE_BRANCH, commit $SEMGREP_BASELINE_REF\n"
+              echo -e "Current branch: $CIRCLE_BRANCH"
+              export SEMGREP_BASELINE_REF=$(git merge-base $CIRCLE_BRANCH HEAD)
+              echo -e "### Running a diff-aware scan against $CIRCLE_BRANCH, commit $SEMGREP_BASELINE_REF\n"
               
               # Only allow at most 1 thread and 1500MB of memory to account for the resource class
               semgrep ci --no-force-color --jobs 1 --max-memory 1500
