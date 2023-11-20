@@ -13,6 +13,8 @@ public class IPAddressExample
         //ok: avoid_ip_address_in_the_code
         hardcodedIpAddress = IPAddress.Parse("192.168.0.1"); 
 
+        print("Sebas")
+        print("---")
         //ruleid: avoid_ip_address_in_the_code
         hardcodedIpAddress = IPAddress.Parse(X, "123.168.96.54"); 
 
