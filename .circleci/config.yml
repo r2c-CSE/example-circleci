@@ -22,7 +22,7 @@ jobs:
       - checkout
       - run:
           name: "Semgrep full scan"
-          command: semgrep ci     
+          command: semgrep ci
   semgrep-diff-scan:
     parameters:
       default_branch:
@@ -37,16 +37,16 @@ jobs:
           environment: 
             SEMGREP_BASELINE_REF: << parameters.default_branch >>
           command: |
-              semgrep ci --json --output report-ssc.json
-              json_file=report-ssc.json
-              findings=$(jq -r '.results[]' "$json_file")
-              for k in $(jq '.results | keys | .[]' "$json_file"); do
-                  value=$(jq -r ".results[$k]" "$json_file");
-                  severity=$(jq -r '.extra.severity' <<< "$value");
-                  reachable=$(jq -r '.extra.sca_info.reachable' <<< "$value");
-                  if [[ $severity == "ERROR" && $reachable == "true" ]]; then
-                      echo "Exiting with error code 1"
-                      exit 1;
-                  fi
-              done
+            semgrep ci --json --output report-ssc.json
+            json_file=report-ssc.json
+            findings=$(jq -r '.results[]' "$json_file")
+            for k in $(jq '.results | keys | .[]' "$json_file"); do
+                value=$(jq -r ".results[$k]" "$json_file");
+                severity=$(jq -r '.extra.severity' <<< "$value");
+                reachable=$(jq -r '.extra.sca_info.reachable' <<< "$value");
+                if [[ $severity == "ERROR" && $reachable == "true" ]]; then
+                    echo "Exiting with error code 1"
+                    exit 1;
+                fi
+            done
 
