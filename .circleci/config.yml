@@ -38,7 +38,7 @@ jobs:
             SEMGREP_BASELINE_REF: << parameters.default_branch >>
           command: |
             echo "Running semgrep and dumping results to JSON file"
-            semgrep ci --json --output report-ssc.json
+            semgrep ci --json --output report-ssc.json || true
             json_file=report-ssc.json
             echo "Iterating through findings"
             findings=$(jq -r '.results[]' "$json_file")
