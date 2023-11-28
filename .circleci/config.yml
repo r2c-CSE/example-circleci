@@ -37,8 +37,10 @@ jobs:
           environment: 
             SEMGREP_BASELINE_REF: << parameters.default_branch >>
           command: |
+            echo "Running semgrep and dumping results to JSON file"
             semgrep ci --json --output report-ssc.json
             json_file=report-ssc.json
+            echo "Iterating through findings"
             findings=$(jq -r '.results[]' "$json_file")
             for k in $(jq '.results | keys | .[]' "$json_file"); do
                 value=$(jq -r ".results[$k]" "$json_file");
@@ -49,4 +51,5 @@ jobs:
                     exit 1;
                 fi
             done
+            echo "There are no reachable critical-high findings"
 
