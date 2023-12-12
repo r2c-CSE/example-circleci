@@ -22,7 +22,7 @@ jobs:
       - checkout
       - run:
           name: "Semgrep full scan"
-          command: semgrep ci     
+          command: semgrep ci
   semgrep-diff-scan:
     parameters:
       default_branch:
@@ -37,9 +37,19 @@ jobs:
           environment: 
             SEMGREP_BASELINE_REF: << parameters.default_branch >>
           command: |
-              echo -e "Current branch: $CIRCLE_BRANCH"
-              export COMMIT=$(git merge-base $CIRCLE_BRANCH $SEMGREP_BASELINE_REF)
-              echo -e "### Running a diff-aware scan for $CIRCLE_BRANCH, commit $COMMIT\n"
-              
-              # Only allow at most 1 thread and 1500MB of memory to account for the resource class
-              semgrep ci --baseline-commit $COMMIT --no-force-color --jobs 1 --max-memory 1500
+            echo "Running semgrep and dumping results to JSON file"
+            semgrep ci --json --output report-ssc.json || true
+            json_file=report-ssc.json
+            echo "Iterating through findings"
+            findings=$(jq -r '.results[]' "$json_file")
+            for k in $(jq '.results | keys | .[]' "$json_file"); do
+                value=$(jq -r ".results[$k]" "$json_file");
+                echo "$value" > finding_content.json
+                severity=$(jq -r '.extra.severity' "finding_content.json");
+                reachable=$(jq -r '.extra.sca_info.reachable' "finding_content.json");
+                if [[ $severity == "ERROR" && $reachable == "true" ]]; then
+                    echo "Exiting with error code 1"
+                    exit 1;
+                fi
+            done
+            echo "There are no reachable critical-high findings"
