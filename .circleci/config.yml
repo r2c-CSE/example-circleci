@@ -53,4 +53,3 @@ jobs:
                 fi
             done
             echo "There are no reachable critical-high findings"
-
