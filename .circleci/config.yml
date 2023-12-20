@@ -23,11 +23,6 @@ jobs:
       - run:
           name: "Semgrep full scan"
           command: |
-            export SEMGREP_BASELINE_REF="origin/main"
-            export SEMGREP_COMMIT=$CIRCLE_SHA1
-            export SEMGREP_JOB_URL=$CIRCLE_BUILD_URL
-            echo $CIRCLE_BRANCH
-            git fetch origin "+refs/heads/*:refs/remotes/origin/*"
             semgrep ci
   semgrep-diff-scan:
     parameters:
@@ -44,7 +39,12 @@ jobs:
             SEMGREP_BASELINE_REF: << parameters.default_branch >>
           command: |
             echo "Running semgrep and dumping results to JSON file"
-            semgrep ci --json --output report-ssc.json || true
+            export SEMGREP_BASELINE_REF="origin/main"
+            export SEMGREP_COMMIT=$CIRCLE_SHA1
+            export SEMGREP_JOB_URL=$CIRCLE_BUILD_URL
+            echo $CIRCLE_BRANCH
+            git fetch origin "+refs/heads/*:refs/remotes/origin/*"
+            semgrep ci --baseline-commit=$(git merge-base main HEAD) --json --output report-ssc.json
             json_file=report-ssc.json
             echo "Iterating through findings"
             findings=$(jq -r '.results[]' "$json_file")
