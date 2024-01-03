@@ -31,6 +31,9 @@ public class HelloLog {
 
         // %m{nolookups} has no effect for the following line
         logger.printf(Level.INFO,"Test: %s", userInput);
+
+        // %m{nolookups} has no effect for the following line
+        logger.printf(Level.INFO,"Test 3: %s", userInput);
     }
 
     public static byte[] bad1(String password) throws NoSuchAlgorithmException {
