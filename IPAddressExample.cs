@@ -20,7 +20,7 @@ public class IPAddressExample
         hardcodedIpAddress = IPAddress.Parse(X, "123.168.96.54"); 
 
         //ruleid: avoid_ip_address_in_the_code
-        IP_ADDRESS = "123.168.96.54";
+        IP_ADDRESS = "123.168.96.59";
 
         //ruleid: avoid_ip_address_in_the_code
         IP_ADDRESS = MY_IP = "123.168.96.54";
