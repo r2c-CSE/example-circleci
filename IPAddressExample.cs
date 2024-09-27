@@ -8,7 +8,7 @@ public class IPAddressExample
 
     public IPAddressExample()
     {
-        string myIP = "123.168.96.54";
+        string myIP = "123.168.96.59";
 
         //ok: avoid_ip_address_in_the_code
         hardcodedIpAddress = IPAddress.Parse("192.168.0.1"); 
